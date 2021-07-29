@@ -1,4 +1,5 @@
 import json
+from enum import unique
 import string
 import requests
 from flask import Flask, jsonify, request, render_template, redirect, Response
@@ -8,6 +9,7 @@ import string
 import random
 import pymongo
 import json
+import validators
 from bson import json_util
 from datetime import datetime
 
@@ -26,10 +28,10 @@ def session():
 def create():
     req = request.data
     req = json.loads(req)
-    uid = req['uid']
-    custom_alias = req['custom_alias']
-    original_url =req['original_url']
-    exp_date = req['exp_date']
+    uid = req.get('uid')
+    custom_alias = req.get('custom_alias')
+    original_url =req.get('original_url')
+    exp_date = req.get('exp_date')
     creation_date = datetime.now()
 
     if custom_alias :
@@ -38,7 +40,11 @@ def create():
         if dup:
             return jsonify("Custom alias is already existing")
         else:
-            db.urls.insert_one({'short_url': custom_alias, 'original_url': original_url, 'creation_date' : creation_date, 'expiration_date' : exp_date, 'user_id' : uid})
+            data = db.urls.find_one({'original_url' : original_url, 'user_id' : uid})
+            if data :
+                db.urls.update_one({'_id': data["_id"]}, {"$set": {'short_url': custom_alias}})
+            else:
+                db.urls.insert_one({'short_url': custom_alias, 'original_url': original_url, 'creation_date' : creation_date, 'expiration_date' : exp_date, 'user_id' : uid})
             return jsonify(custom_alias)       
     else:
         # apply hasing and create a unique short_url
@@ -60,21 +66,24 @@ def create():
 @app.route('/redirect', methods=["GET"])
 def redirecturl():
     short_url = request.args.get('short_url')
-    alias = short_url[-URL_LENGTH:]
-    data = db.urls.find_one({'short_url' : alias})
+    data = db.urls.find_one({'short_url' : short_url})
     redirect_path = data['original_url']
     if not redirect_path:
-        return render_template('404.html')
+        return jsonify("Url not specified")
     else:
-        return redirect(redirect_path, code=302)
+        if validators.url(redirect_path) :
+            return redirect(redirect_path, code=302)
+        else:
+            return jsonify("Invalid url")
 
 @app.route('/fetch', methods=["GET"])
 def fetch():
     uid = request.args.get('uid')
+    data = list(db.urls.find({'user_id' : uid}))
+    for d in data:
+        if d['expiration_date'] and d['expiration_date'] <= datetime.now():
+            db.urls.delete_one({'short_url' : d['short_url']})
     data = db.urls.find({'user_id' : uid})
-    for d in list(data):
-        if d['expiration_date'] and d['expiration_date'] >= datetime.now():
-            db.urls.delete_one({'short_url' : data['short_url']})
     return Response(json_util.dumps(data))
 
 @app.route('/delete', methods=["GET"])

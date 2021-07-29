@@ -10,13 +10,15 @@ import { SusGenerateComponent } from './sus-generate/sus-generate.component';
 import { SusPageNotFoundComponent } from './sus-page-not-found/sus-page-not-found.component';
 import { LoginComponent } from './login/login.component'; 
 import {HttpClientModule} from '@angular/common/http';
+import { SusViewUrlsComponent } from './sus-view-urls/sus-view-urls.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SusGenerateComponent,
     SusPageNotFoundComponent,
-    LoginComponent
+    LoginComponent,
+    SusViewUrlsComponent
   ],
   imports: [
     BrowserModule,

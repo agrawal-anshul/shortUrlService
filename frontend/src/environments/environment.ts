@@ -6,6 +6,8 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:8000/',
   uiUrl:'http://localhost:4200/',
+  // apiUrl: 'http://10.186.68.39:8000/',
+  // uiUrl:'http://10.186.68.39:4200/',
 };
 
 /*

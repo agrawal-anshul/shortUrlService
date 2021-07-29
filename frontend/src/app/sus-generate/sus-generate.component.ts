@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sus-generate',
@@ -7,12 +9,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SusGenerateComponent implements OnInit {
 
+  username:String=""
+  apiUrl=environment.apiUrl
   longUrl:string=""
-  shortUrl:string=""
-  shortUrl1:string=""
-  constructor() { }
+  customUrlString:string=""
+  d=new Date()
+  expiryDate:Date=new Date(this.d.getFullYear(),this.d.getMonth(),this.d.getDate()+3)
 
+  constructor(private httpClient: HttpClient){
+    this.username=localStorage.getItem('username') || ""
+  }
+  
   ngOnInit(): void {
   }
 
+  generate(){
+    // console.log(this.longUrl);
+    // console.log(this.customUrlString);
+    // console.log(this.expiryDate.toISOString());
+
+    this.httpClient.post(this.apiUrl+"create",{
+      'uid':this.username,
+      'custom_alias':this.customUrlString,
+      'original_url':this.longUrl,
+      'exp_date':this.expiryDate.toISOString()
+    }).subscribe(
+      (data:any)=>{
+        console.log(data);
+      },
+      err=>{console.log(err);}
+    )
+  }
 }

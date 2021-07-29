@@ -1,22 +1,32 @@
 <header class="header-6">
   <div class="branding">
-    <a href="javascript://" class="nav-link">
+    <a routerLink="" class="nav-link">
       <cds-icon shape="vm-bug"></cds-icon>
       <span class="title">ShortUrlService</span>
     </a>
   </div>
-  <!-- <div class="header-actions header-actions--overflow">
+
+  <div class="header-nav">
+    <a routerLink="/home" routerLinkActive="active"  class="nav-link nav-text">
+     Generate URL
+    </a>
+    <a routerLink="/view" routerLinkActive="active"  class="nav-link nav-text">
+      View URLs
+    </a>
+  </div>
+
+  <div class="header-actions header-actions--overflow" *ngIf="username">
     <clr-dropdown>
       <button class="nav-text" clrDropdownTrigger>
         <cds-icon shape="user" size="md" aria-label="This is an example of an icon of a user with the default color of the surrounding text"></cds-icon>
-        johndoe@vmware.com
+        {{username}}@vmware.com
         <cds-icon shape="angle" direction="down" size="xxl"></cds-icon>
       </button>
       <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-        <a clrDropdownItem>Log out</a>
+        <a clrDropdownItem (click)='logout()'>Log out</a>
       </clr-dropdown-menu>
     </clr-dropdown>
-  </div> -->
+  </div>
 </header>
 <div class="main-container">
   <router-outlet></router-outlet>

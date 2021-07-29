@@ -7,10 +7,10 @@
         </label>
         <div class="login-group">
             <input  type="text" name="username" placeholder="Username" [(ngModel)]="username">
-            <div class="error active" *ngIf="invalidUsername">
+            <div class="error active" *ngIf="!validUser">
                 Invalid username
             </div>
-            <button type="submit" (click)="validate()" class="btn btn-primary">Login</button>
+            <button type="submit" (click)="login()" class="btn btn-primary">Login</button>
         </div>
     </form>
 </div>

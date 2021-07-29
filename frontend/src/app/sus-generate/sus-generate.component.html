@@ -1,7 +1,7 @@
 <div class="clr-row">
-    <div class="clr-col-4"></div>
-    <div class="clr-col-lg-4 clr-col-12">
-        <div class="card ">
+    <div class="clr-col-3"></div>
+    <div class="clr-col-lg-6 clr-col-12">
+        <div class="card " >
             <div class="card-block">
                 <!-- <h3 class="card-title" ></h3> -->        
                 <form class="clr-form clr-form-horizontal" >
@@ -9,20 +9,24 @@
                         <label>Your long URL</label>
                         <input clrInput type="text" [(ngModel)]="longUrl" name="longUrl" placeholder="Paste your url..." />
                     </clr-input-container>                    
+                    <clr-date-container>
+                        <label>Link expiry date </label>
+                        <input type="date" [(clrDate)]="expiryDate" />
+                    </clr-date-container>                   
                     
                     <div class="clr-form-control">
-                        <label for="customizeUrl" class="clr-control-label">Customize your URL</label>
+                        <label for="customUrl" class="clr-control-label">Customize your URL</label>
                         <div class="clr-control-container">
                             <div class="clr-input-wrapper">
-                                <input type="text" id="customizeUrl" placeholder="Enter custom url" class="clr-input" [(ngModel)]="shortUrl" name="shortUrl" />
+                                <input type="text" id="customUrl" placeholder="Enter custom url string" class="clr-input" [(ngModel)]="customUrlString" name="customUrlString" />
                             </div>
-                            <span class="clr-subtext" style="margin-top:0.8rem;font-weight: bolder;">shortUrlService.com/{{shortUrl}}</span>
+                            <span class="clr-subtext" style="margin-top:0.8rem;font-weight: bolder;">shortUrlService.com/{{customUrlString}}</span>
                         </div>
                     </div>
                     <div class="clr-form-control">
-                        <label for="customizeUrl" class="clr-control-label"></label>
+                        <label for="customUrlButtom" class="clr-control-label"></label>
                         <div class="clr-control-container">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" (click)="generate()">
                                 Get tiny Url
                             </button>                            
                         </div>

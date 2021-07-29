@@ -1,3 +1,4 @@
+import json
 import string
 import requests
 from flask import Flask, jsonify,request,render_template
@@ -18,18 +19,19 @@ db = mongodb_client["shorturl"]
 def session():
 	return "shortUrlSystem APIs say Hello!"
 
-@app.route('/create', methods=['POST','GET'])
+@app.route('/create', methods=['POST'])
+@cross_origin(allow_headers=['Content-Type'])
 def create():
     if request.method == 'POST':
-        uid = request.form.get['uid']
-        email = request.form.get['email']
-        custom_alias = request.form.get['custom_alias']
-        original_url = request.form.get['original_url']
-        exp_date = request.form.get['exp_date']
+        req = request.data
+        req = json.loads(req)
+        uid = req['uid']
+        custom_alias = req['custom_alias']
+        original_url =req['original_url']
+        exp_date = req['exp_date']
         creation_date = datetime.now()
 
-        db.users.insert_one({'user_id': uid, 'email': email})
-
+        print(custom_alias)
         if custom_alias :
             # custom_alis is used as short url only if it's not a duplicate
             dup = db.urls.find_one({"short_url": custom_alias})
@@ -75,16 +77,30 @@ def delete():
     short_url = request.form.get('short_url')
     db.urls.deleteOne({'short_url' : short_url})
 
-@app.route("/user_login", methods=["GET"])
+@app.route("/login", methods=["GET"])
 @cross_origin(allow_headers=['Content-Type'])
-def user_login():
+def login():
     response = {}
-    user = request.args.get("user", None)
+    user = request.args.get("username", None)    
     if user:
         response = requests.get("http://wdc-prd-nimbus-api.eng.vmware.com/api/v1/users/{}".format(user))
-        print(response.status_code)
-        return response.json()
-    return response
+        data=response.json()
+        if response.status_code==200:
+            # check if the user is already present in db
+            existing_user= db.user.find_one({"user_id": user})
+            if existing_user:
+                #if present then update the last login
+                db.user.update_one({"user_id":existing_user['user_id']},{"$set":{"last_login":datetime.now()}})
+            else:
+                #if not exists, insert the new user
+                db.user.insert_one({'user_id':user,'email':user+"@vmware.com",'creation_ts':datetime.now(),'last_login':datetime.now()})
+
+            return {"status_code":response.status_code, "data":data }
+        else:
+            return {"status_code":response.status_code, "data":data}        
+    return {"status_code":-1, "message":"username param missing"}
+
+
 
 if __name__ == '__main__':
 	app.run(host="localhost", port=8000, debug=True)

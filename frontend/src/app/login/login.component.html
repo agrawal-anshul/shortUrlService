@@ -1,0 +1,16 @@
+<div class="login-wrapper">
+    <form class="login">
+        <label class="title">
+            <h3 class="welcome">Welcome to</h3>
+            ShortUrlService
+            <h5 class="hint">Use your Company Username to signin</h5>
+        </label>
+        <div class="login-group">
+            <input class="username" type="text" id="login_username" placeholder="Username">
+            <div class="error active" *ngIf="userInvalid">
+                Invalid user name
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    </form>
+</div>

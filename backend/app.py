@@ -63,9 +63,9 @@ def create():
         db.urls.insert_one({'short_url': short_url, 'original_url': original_url, 'creation_date' : creation_date, 'expiration_date' : exp_date, 'user_id' : uid})
         return jsonify(short_url) 
 
-@app.route('/redirect', methods=["GET"])
-def redirecturl():
-    short_url = request.args.get('short_url')
+@app.route('/<short_url>')
+def redirecturl(short_url):
+    # short_url = request.args.get('short_url')
     data = db.urls.find_one({'short_url' : short_url})
     redirect_path = data['original_url']
     if not redirect_path:

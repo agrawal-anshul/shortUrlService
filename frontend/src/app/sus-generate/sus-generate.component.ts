@@ -13,6 +13,7 @@ export class SusGenerateComponent implements OnInit {
   apiUrl=environment.apiUrl
   longUrl:string=""
   customUrlString:string=""
+  tinyUrl:string=""
   d=new Date()
   expiryDate:Date=new Date(this.d.getFullYear(),this.d.getMonth(),this.d.getDate()+3)
 
@@ -34,8 +35,9 @@ export class SusGenerateComponent implements OnInit {
       'original_url':this.longUrl,
       'exp_date':this.expiryDate.toISOString()
     }).subscribe(
-      (data:any)=>{
-        console.log(data);
+      (res:any)=>{
+        console.log(res);
+        this.tinyUrl=res
       },
       err=>{console.log(err);}
     )

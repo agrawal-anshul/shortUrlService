@@ -44,7 +44,7 @@ def create():
         # apply hasing and create a unique short_url
         data = db.urls.find_one({'original_url' : original_url, 'user_id' : uid})
         if data :
-            return data['short_url']
+            return jsonify(data['short_url'])
 
         hash_val = hashlib.md5(original_url.encode('utf-8')).hexdigest()
         short_url = ''.join((random.choice(hash_val) for _ in range(URL_LENGTH)))

@@ -10,6 +10,7 @@ import pymongo
 import json
 from bson import json_util
 from datetime import datetime
+import dateutil.parser as parser
 
 URL_LENGTH = 7
 app = Flask(__name__)
@@ -29,7 +30,9 @@ def create():
     uid = req['uid']
     custom_alias = req['custom_alias']
     original_url =req['original_url']
-    exp_date = req['exp_date']
+    exp_date = parser.parse(req['exp_date'])
+    print(exp_date.isoformat())
+
     creation_date = datetime.now()
 
     if custom_alias :
@@ -92,13 +95,13 @@ def login():
         data=response.json()
         if response.status_code==200:
             # check if the user is already present in db
-            existing_user= db.user.find_one({"user_id": user})
+            existing_user= db.users.find_one({"user_id": user})
             if existing_user:
                 #if present then update the last login
-                db.user.update_one({"user_id":existing_user['user_id']},{"$set":{"last_login":datetime.now()}})
+                db.users.update_one({"user_id":existing_user['user_id']},{"$set":{"last_login":datetime.now()}})
             else:
                 #if not exists, insert the new user
-                db.user.insert_one({'user_id':user,'email':user+"@vmware.com",'creation_ts':datetime.now(),'last_login':datetime.now()})
+                db.users.insert_one({'user_id':user,'email':user+"@vmware.com",'creation_ts':datetime.now(),'last_login':datetime.now()})
 
             return {"status_code":response.status_code, "data":data }
         else:

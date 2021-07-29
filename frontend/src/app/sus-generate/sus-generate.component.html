@@ -1,0 +1,61 @@
+<div class="clr-row">
+    <div class="clr-col-4"></div>
+    <div class="clr-col-lg-4 clr-col-12">
+        <div class="card ">
+            <div class="card-block">
+                <!-- <h3 class="card-title" ></h3> -->        
+                <form class="clr-form clr-form-horizontal" >
+                    <clr-input-container >
+                        <label>Your long URL</label>
+                        <input clrInput type="text" [(ngModel)]="longUrl" name="longUrl" placeholder="Paste your url..." />
+                    </clr-input-container>
+                    <!-- <div class="clr-row">
+                        <div class="clr-col">
+                            <clr-input-container>
+                                <label>Customize your URL</label>
+                                <input clrInput type="text" [(ngModel)]="shortUrl" name="shortUrl" />
+                            </clr-input-container>
+                        </div>
+                        <div class="clr-col" style="padding: 1.5rem 0 0 1rem ;">
+                            <a >
+                                <cds-icon shape="copy"></cds-icon>
+                            </a>
+                        </div>
+                    </div> -->
+                    
+                    
+                    <div class="clr-form-control">
+                        <label for="customizeUrl" class="clr-control-label">Customize your URL</label>
+                        <div class="clr-control-container">
+                        <div class="clr-input-wrapper">
+                            <input type="text" id="customizeUrl" placeholder="Enter custom url" class="clr-input" [(ngModel)]="shortUrl" name="shortUrl" />
+                            <button class="btn btn-primary" style="margin: 0 0 0 1.5rem;">
+                                Get tiny Url
+                            </button>
+                        </div>
+                        <span class="clr-subtext" style="margin-top:0.8rem;font-weight: bolder;">shortUrlService.com/{{shortUrl}}</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="clr-row">
+                    <div class="clr-col"></div>
+                    
+                    <div class="clr-col-2">
+                        <a href="" class="btn btn-primary btn-link"><cds-icon shape="redo"></cds-icon></a>
+                    </div>
+                    <div class="clr-col-2">
+                        <a href="" class="btn btn-primary btn-link"><cds-icon shape="copy"></cds-icon></a>
+                    </div>
+                    <div class="clr-col-2">
+                        <a href="" class="btn btn-primary btn-link"><cds-icon shape="envelope"></cds-icon></a>
+                    </div>
+
+                    <div class="clr-col"></div>
+                </div>
+                                
+            </div>
+        </div>
+    </div>
+</div>

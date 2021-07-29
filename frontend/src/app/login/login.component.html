@@ -6,11 +6,11 @@
             <h5 class="hint">Use your Company Username to signin</h5>
         </label>
         <div class="login-group">
-            <input class="username" type="text" id="login_username" placeholder="Username">
-            <div class="error active" *ngIf="userInvalid">
-                Invalid user name
+            <input  type="text" name="username" placeholder="Username" [(ngModel)]="username">
+            <div class="error active" *ngIf="invalidUsername">
+                Invalid username
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" (click)="validate()" class="btn btn-primary">Login</button>
         </div>
     </form>
 </div>

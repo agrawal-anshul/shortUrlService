@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  userInvalid:boolean=false
-  constructor() { }
+  username:string=""
+  invalidUsername:boolean=false
+  constructor(private httpClient: HttpClient) { 
+    
+  }
 
   ngOnInit(): void {
   }
 
+  validate(){
+    // httpClient.get("")
+  }
 }

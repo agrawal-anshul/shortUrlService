@@ -1,19 +1,22 @@
 import string
-from flask import Flask, jsonify, request, PyMongo, render_template
+import requests
+from flask import Flask, jsonify,request,render_template
+from flask_cors import CORS, cross_origin
 import hashlib
 import string
 import random
+import pymongo
 from datetime import datetime
 
 URL_LENGTH = 7
 app = Flask(__name__)
 
-mongodb_client = PyMongo(app, uri="mongodb://10.186.68.39:27017/shorturl")
-db = mongodb_client.db
+mongodb_client = pymongo.MongoClient("mongodb://10.186.68.39:27017")
+db = mongodb_client["shorturl"]
 
 @app.route('/')
 def session():
-	return render_template('index.html')
+	return "shortUrlSystem APIs say Hello!"
 
 @app.route('/create', methods=['POST','GET'])
 def create():
@@ -71,5 +74,17 @@ def delete():
         short_url = request.form.get('short_url')
         db.urls.deleteOne({'short_url' : short_url})
 
+@app.route("/user_login", methods=["GET"])
+@cross_origin(allow_headers=['Content-Type'])
+def user_login():
+    response = {}
+    user = request.args.get("user", None)
+    if user:
+        response = requests.get("http://wdc-prd-nimbus-api.eng.vmware.com/api/v1/users/{}".format(user))
+        print(response.status_code)
+        return response.json()
+    return response
+
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(host="localhost", port=8000, debug=True)
+	# app.run(host="0.0.0.0", port=8000, debug=True)

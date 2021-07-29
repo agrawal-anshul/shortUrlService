@@ -26,12 +26,12 @@ def create():
         custom_alias = request.form.get['custom_alias']
         original_url = request.form.get['original_url']
         exp_date = request.form.get['exp_date']
-        creation_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+        creation_date = datetime.now()
 
         db.users.insert_one({'user_id': uid, 'email': email})
 
         if custom_alias :
-            # check whether duplicate exists
+            # custom_alis is used as short url only if it's not a duplicate
             dup = db.urls.find_one({"short_url": custom_alias})
             if dup:
                 return jsonify("Custom alias is already existing")
@@ -39,40 +39,41 @@ def create():
                 db.urls.insert_one({'short_url': custom_alias, 'original_url': original_url, 'creation_date' : creation_date, 'expiration_date' : exp_date, 'user_id' : uid})
                 return jsonify(custom_alias)       
         else:
-            # apply hashing for original url
+            # apply hasing and create a unique short_url
             hash_val = hashlib.md5(original_url.encode('utf-8')).hexdigest()
-            short_url = ''.join((random.choice(hash) for x in range(URL_LENGTH)))
+            short_url = ''.join((random.choice(hash_val) for _ in range(URL_LENGTH)))
             while (True):
                 dup = db.urls.find_one({"short_url": short_url})
                 if dup:
-                    short_url = ''.join((random.choice(hash) for x in range(URL_LENGTH)))
+                    short_url = ''.join((random.choice(hash) for _ in range(URL_LENGTH)))
                     break
             db.urls.insert_one({'short_url': short_url, 'original_url': original_url, 'creation_date' : creation_date, 'expiration_date' : exp_date, 'user_id' : uid})
             return jsonify(short_url) 
 
-@app.route('/redirect', methods=['POST'])
+@app.route('/redirect')
 def redirect():
-    if request.method == 'POST':
-        short_url = request.form.get('short_url')
-        alias = short_url[-URL_LENGTH]
-        redirect_path = db.urls.find_one({'short_url' : alias})
-        if not redirect_path:
-            return render_template('404.html')
-        else:
-            return render_template('redirect.html', redirect_path = redirect_path['original_url'])
+    short_url = request.form.get('short_url')
+    alias = short_url[-URL_LENGTH]
+    redirect_path = db.urls.find_one({'short_url' : alias})
+    if not redirect_path:
+        return render_template('404.html')
+    else:
+        return render_template('redirect.html', redirect_path = redirect_path['original_url'])
 
-@app.route('/fetch', methods=['POST','GET'])
+@app.route('/fetch')
 def fetch():
-    if request.method == 'POST':
-        uid = request.form.get('uid')
-        data = db.user.find_one({'user_id' : uid})
-        return data
+    uid = request.form.get('uid')
+    data = db.user.find_one({'user_id' : uid})
+    if data['expiration_date'] >= datetime.now():
+        delete(data['short_url'])
+        return None
+    return data
 
-@app.route('/delete', methods=['POST'])
+
+@app.route('/delete')
 def delete():
-    if request.method == 'POST':
-        short_url = request.form.get('short_url')
-        db.urls.deleteOne({'short_url' : short_url})
+    short_url = request.form.get('short_url')
+    db.urls.deleteOne({'short_url' : short_url})
 
 @app.route("/user_login", methods=["GET"])
 @cross_origin(allow_headers=['Content-Type'])

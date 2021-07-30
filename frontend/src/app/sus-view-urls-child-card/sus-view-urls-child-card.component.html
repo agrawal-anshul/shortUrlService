@@ -1,8 +1,8 @@
-<div class="clr-row">
-    <div class="clr-col-lg-6 clr-col-12">
+<div class="clr-row" *ngFor="let item of newUserUrl">
+    <div class="clr-col">
       <div class="card">
         <div class="card-header" style="font-weight: 900;">
-          {{userUrls['user_id'].toUpperCase()}}
+          {{item['user_id'].toUpperCase()}}
         </div>
         <div class="card-block">
           <div class="card-title">            
@@ -15,18 +15,18 @@
                     <label for="example4" class="clr-control-label">creation_date</label>
                     <div class="clr-control-container">
                       <div class="clr-input-wrapper">
-                        <input type="text" id="example4" placeholder="Placeholder" class="clr-input" value='{{userUrls["creation_date"]}}'/>
+                        <input type="text" id="example4" placeholder="Placeholder" class="clr-input" value='{{item["creation_date"]}}'/>
                       </div>
-                      <span class="clr-subtext" *ngIf='!userUrls["creation_date"]'>Null</span>
+                      <span class="clr-subtext" *ngIf='!item["creation_date"]'>Null</span>
                     </div>
                   </div>
                   <div class="clr-form-control">
                     <label for="example4" class="clr-control-label">expiration_date</label>
                     <div class="clr-control-container">
                       <div class="clr-input-wrapper">
-                        <span type="text" id="example4" placeholder="None" class="clr-input">{{userUrls["expiration_date"]}}</span>
+                        <span type="text" id="example4" placeholder="None" class="clr-input">{{item["expiration_date"]}}</span>
                       </div>
-                      <span class="clr-subtext" *ngIf='!userUrls["expiration_date"]'>Null</span>
+                      <span class="clr-subtext" *ngIf='!item["expiration_date"]'>Null</span>
                     </div>
                   </div>
                 
@@ -35,7 +35,7 @@
                     <label for="example4" class="clr-control-label">Short Url</label>
                     <div class="clr-control-container">
                       <div class="clr-input-wrapper">
-                        <span type="text" id="example4" placeholder="Placeholder" class="clr-input">{{userUrls["short_url"]}}</span> 
+                        <span type="text" id="example4" placeholder="Placeholder" class="clr-input">{{item["short_url"]}}</span> 
                       </div>
                       <span class="clr-subtext">Helper Text</span>
                     </div>
@@ -45,7 +45,7 @@
                   <label for="example1" class="clr-control-label">Original Url</label>
                   <div class="clr-control-container">
                     <div class="clr-input-wrapper">
-                      <textarea id="example1" placeholder="Placeholder" class="clr-textarea" value="{{userUrls['original_url']}}"></textarea>
+                      <textarea id="example1" placeholder="Placeholder" class="clr-textarea" value="{{item['original_url']}}"></textarea>
                     </div>
                   </div>
                 </div>
@@ -55,8 +55,8 @@
           </div>
         </div>
         <div class="card-footer">
-          <button class="btn btn-sm btn-link">Footer Action 1</button>
-          <button class="btn btn-sm btn-link">Footer Action 2</button>
+          <button class="btn btn-sm btn-link" (click)="delete(item['short_url'])">Delete</button>
+          
         </div>
       </div>
     </div>

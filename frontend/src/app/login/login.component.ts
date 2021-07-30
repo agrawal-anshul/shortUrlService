@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -13,17 +14,18 @@ export class LoginComponent implements OnInit {
   username:string=""
   validUser:boolean=true
   apiUrl = environment.apiUrl
-  constructor(private httpClient: HttpClient,public router:Router) { 
-    
+  constructor(private httpClient: HttpClient,public router:Router,public cookieService: CookieService) { 
+   
   }
 
   ngOnInit(): void {
+
   }
 
   login(){
     this.httpClient.get(this.apiUrl+"/login?username="+this.username).subscribe(
       (res:any)=>{
-        console.log(res);
+        // console.log(res);
         if(res['status_code']==200)
         {
           this.validUser=true

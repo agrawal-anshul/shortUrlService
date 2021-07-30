@@ -82,6 +82,9 @@ def fetch():
 def delete():
     short_url = request.args.get('short_url')
     db.urls.delete_one({'short_url' : short_url})
+    return {"status":True}
+    
+
 
 @app.route("/login", methods=["GET"])
 @cross_origin(allow_headers=['Content-Type'])

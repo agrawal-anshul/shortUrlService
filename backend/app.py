@@ -66,20 +66,6 @@ def create():
         db.urls.insert_one({'short_url': short_url, 'original_url': original_url, 'creation_date' : creation_date, 'expiration_date' : exp_date, 'user_id' : uid})
         return jsonify(short_url) 
 
-@app.route('/redirect', methods=["GET"])
-@cross_origin(allow_headers=['Content-Type'])
-def redirecturl():
-    short_url = request.args.get('short_url')
-    data = db.urls.find_one({'short_url' : short_url})
-    redirect_path = data['original_url']
-    if not redirect_path:
-        return jsonify("Url not specified")
-    else:
-        if validators.url(redirect_path) :
-            return redirect(redirect_path, code=302)
-        else:
-            return jsonify("Invalid url")
-
 @app.route('/fetch', methods=["GET"])
 @cross_origin(allow_headers=['Content-Type'])
 def fetch():
@@ -120,7 +106,19 @@ def login():
             return {"status_code":response.status_code, "data":data}        
     return {"status_code":-1, "message":"username param missing"}
 
-
+@app.route('/<short_url>')
+@cross_origin(allow_headers=['Content-Type'])
+def redirecturl(short_url):
+    # short_url = request.args.get('short_url')
+    data = db.urls.find_one({'short_url' : short_url})
+    redirect_path = data['original_url']
+    if not redirect_path:
+        return jsonify("Url not specified")
+    else:
+        if validators.url(redirect_path) :
+            return redirect(redirect_path, code=302)
+        else:
+            return jsonify("Invalid url")
 
 if __name__ == '__main__':
 	app.run(host="localhost", port=8000, debug=True)

@@ -12,6 +12,7 @@ import json
 import validators
 from bson import json_util
 from datetime import datetime
+import dateutil.parser as parser
 
 URL_LENGTH = 7
 app = Flask(__name__)
@@ -28,10 +29,12 @@ def session():
 def create():
     req = request.data
     req = json.loads(req)
-    uid = req.get('uid')
-    custom_alias = req.get('custom_alias')
-    original_url =req.get('original_url')
-    exp_date = req.get('exp_date')
+    uid = req['uid']
+    custom_alias = req['custom_alias']
+    original_url =req['original_url']
+    exp_date = parser.parse(req['exp_date'])
+    print(exp_date.isoformat())
+
     creation_date = datetime.now()
 
     if custom_alias :
@@ -63,20 +66,8 @@ def create():
         db.urls.insert_one({'short_url': short_url, 'original_url': original_url, 'creation_date' : creation_date, 'expiration_date' : exp_date, 'user_id' : uid})
         return jsonify(short_url) 
 
-@app.route('/<short_url>')
-def redirecturl(short_url):
-    # short_url = request.args.get('short_url')
-    data = db.urls.find_one({'short_url' : short_url})
-    redirect_path = data['original_url']
-    if not redirect_path:
-        return jsonify("Url not specified")
-    else:
-        if validators.url(redirect_path) :
-            return redirect(redirect_path, code=302)
-        else:
-            return jsonify("Invalid url")
-
 @app.route('/fetch', methods=["GET"])
+@cross_origin(allow_headers=['Content-Type'])
 def fetch():
     uid = request.args.get('uid')
     data = list(db.urls.find({'user_id' : uid}))
@@ -87,6 +78,7 @@ def fetch():
     return Response(json_util.dumps(data))
 
 @app.route('/delete', methods=["GET"])
+@cross_origin(allow_headers=['Content-Type'])
 def delete():
     short_url = request.args.get('short_url')
     db.urls.delete_one({'short_url' : short_url})
@@ -101,20 +93,32 @@ def login():
         data=response.json()
         if response.status_code==200:
             # check if the user is already present in db
-            existing_user= db.user.find_one({"user_id": user})
+            existing_user= db.users.find_one({"user_id": user})
             if existing_user:
                 #if present then update the last login
-                db.user.update_one({"user_id":existing_user['user_id']},{"$set":{"last_login":datetime.now()}})
+                db.users.update_one({"user_id":existing_user['user_id']},{"$set":{"last_login":datetime.now()}})
             else:
                 #if not exists, insert the new user
-                db.user.insert_one({'user_id':user,'email':user+"@vmware.com",'creation_ts':datetime.now(),'last_login':datetime.now()})
+                db.users.insert_one({'user_id':user,'email':user+"@vmware.com",'creation_ts':datetime.now(),'last_login':datetime.now()})
 
             return {"status_code":response.status_code, "data":data }
         else:
             return {"status_code":response.status_code, "data":data}        
     return {"status_code":-1, "message":"username param missing"}
 
-
+@app.route('/<short_url>')
+@cross_origin(allow_headers=['Content-Type'])
+def redirecturl(short_url):
+    # short_url = request.args.get('short_url')
+    data = db.urls.find_one({'short_url' : short_url})
+    redirect_path = data['original_url']
+    if not redirect_path:
+        return jsonify("Url not specified")
+    else:
+        if validators.url(redirect_path) :
+            return redirect(redirect_path, code=302)
+        else:
+            return jsonify("Invalid url")
 
 if __name__ == '__main__':
 	app.run(host="localhost", port=8000, debug=True)

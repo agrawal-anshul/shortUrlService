@@ -33,11 +33,11 @@ export class SusGenerateComponent implements OnInit {
       'uid':this.username,
       'custom_alias':this.customUrlString,
       'original_url':this.longUrl,
-      'exp_date':this.expiryDate.toISOString()
+      'exp_date':this.expiryDate
     }).subscribe(
       (res:any)=>{
         console.log(res);
-        this.tinyUrl=res
+        this.tinyUrl=this.apiUrl+"redirect/"+res
       },
       err=>{console.log(err);}
     )

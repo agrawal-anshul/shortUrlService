@@ -11,6 +11,7 @@ import { SusPageNotFoundComponent } from './sus-page-not-found/sus-page-not-foun
 import { LoginComponent } from './login/login.component'; 
 import {HttpClientModule} from '@angular/common/http';
 import { SusViewUrlsComponent } from './sus-view-urls/sus-view-urls.component';
+import { SusViewUrlsChildCardComponent } from './sus-view-urls-child-card/sus-view-urls-child-card.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { SusViewUrlsComponent } from './sus-view-urls/sus-view-urls.component';
     SusGenerateComponent,
     SusPageNotFoundComponent,
     LoginComponent,
-    SusViewUrlsComponent
+    SusViewUrlsComponent,
+    SusViewUrlsChildCardComponent
   ],
   imports: [
     BrowserModule,

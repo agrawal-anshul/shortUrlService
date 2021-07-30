@@ -1,1 +1,5 @@
-<p>sus-view-urls works!</p>
+<div class="clr-row" *ngFor="let item of userUrls">
+    <div class="clr-col-3"></div>
+   <div class="clr-col"> <app-sus-view-urls-child-card [userUrls]="item"></app-sus-view-urls-child-card>  </div>  
+   
+</div>

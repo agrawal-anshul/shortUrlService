@@ -19,12 +19,14 @@
     "@angular/platform-browser": "~11.2.6",
     "@angular/platform-browser-dynamic": "~11.2.6",
     "@angular/router": "~11.2.6",
+    "@cds/core": "^5.0.0",
     "@clr/angular": "5.4.1",
+    "@clr/ui": "5.4.1",
+    "ngx-clipboard": "^14.0.1",
+    "ngx-cookie": "^5.0.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
-    "zone.js": "~0.11.3",
-    "@clr/ui": "5.4.1",
-    "@cds/core": "^5.0.0"
+    "zone.js": "~0.11.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1102.5",

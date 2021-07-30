@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
   selector: 'app-sus-generate',
@@ -17,11 +18,15 @@ export class SusGenerateComponent implements OnInit {
   d=new Date()
   expiryDate:Date=new Date(this.d.getFullYear(),this.d.getMonth(),this.d.getDate()+3)
 
-  constructor(private httpClient: HttpClient){
+  constructor(private httpClient: HttpClient,public clipboard: ClipboardService){
     this.username=localStorage.getItem('username') || ""
   }
   
   ngOnInit(): void {
+  }
+  
+  copyUrl(){
+    this.clipboard.copy(this.tinyUrl)
   }
 
   generate(){
@@ -37,7 +42,7 @@ export class SusGenerateComponent implements OnInit {
     }).subscribe(
       (res:any)=>{
         console.log(res);
-        this.tinyUrl=this.apiUrl+"redirect/"+res
+        this.tinyUrl=this.apiUrl+res
       },
       err=>{console.log(err);}
     )

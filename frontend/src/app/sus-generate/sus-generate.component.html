@@ -46,13 +46,13 @@
                     <div class="clr-col"></div>
                     
                     <div class="clr-col-2">
-                        <a href="" class="btn btn-primary btn-link"><cds-icon shape="redo"></cds-icon></a>
+                        <a href="{{tinyUrl}}" target="_blank" class="btn btn-primary btn-link"><cds-icon shape="redo"></cds-icon></a>
                     </div>
                     <div class="clr-col-2">
-                        <a href="" class="btn btn-primary btn-link"><cds-icon shape="copy"></cds-icon></a>
+                        <a  class="btn btn-primary btn-link"><cds-icon shape="copy" (click)="copyUrl()"></cds-icon></a>
                     </div>
                     <div class="clr-col-2">
-                        <a href="" class="btn btn-primary btn-link"><cds-icon shape="envelope"></cds-icon></a>
+                        <a  href="mailto:?subject=Sharing the tinyUrl from ShortUrlService&body={{tinyUrl}}" class="btn btn-primary btn-link" ><cds-icon shape="envelope"></cds-icon></a>
                     </div>
 
                     <div class="clr-col"></div>
